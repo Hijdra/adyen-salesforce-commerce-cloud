@@ -60,6 +60,12 @@ function processNotifications(pdict) {
 		if(notify){
             var placeOrderResult = submitOrder(order);
             if (!placeOrderResult.order_created || placeOrderResult.error) {
+				Transaction.wrap(function () {
+					var now = new Date();
+					customObj.custom.processedDate = now;
+					customObj.custom.updateStatus = 'PROCESS';
+					customObj.custom.processedStatus = 'PROCESS';
+				});
                 logger.error('Failed to place an order: {0}, during notification process.', order.orderNo);
             }
 		}
